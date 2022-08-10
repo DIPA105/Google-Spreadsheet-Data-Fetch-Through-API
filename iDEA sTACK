@@ -1,0 +1,65 @@
+                                                  : Google Spreadsheet Data Fetch Through API:
+1. Create spreadsheets. 
+
+2. Click on Extensions and then click apps script.
+
+3.Spreadsheet Code↓
+
+Sample code:
+function outputData() {
+  const id = '1l34YWOTSfrTFyHjA_0uXVwVkk1upMoeCd6xIVdHSB30';
+  const sheetname = 'Sheet1';
+  const ss = SpreadsheetApp.openById(id);
+  const sheet = ss.getSheetByName(sheetname);
+  const range = sheet.getDataRange();
+  const data = range.getValues();
+  const headings = data[0].map((val)=>{
+  // Logger.log(val);
+  return val.toString().toLocaleLowerCase();
+})
+const rows = data.slice(1);
+return (covObjects(rows,headings));
+}
+
+function covObjects(rows,headings){
+const temp = rows.map((row)=>{
+    const myObj = {};
+    headings.forEach((heading,index)=>{
+      myObj[heading] = row[index];
+})
+  return myObj;
+  })
+  return temp;
+}
+function doGet(e){
+  const output = JSON.stringify({
+    status:'success',
+    data:outputData()
+
+  })
+  return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.JSON);
+}
+
+4.Now Create Spreadsheet Link for displaying all data together. First Click on Deploy. If you want to deploy this spreadsheet, click on new deployment. Then you can get API link. 
+
+5.Showing all data through this API spreadsheet link. 
+
+6.If you want to show all data through php then the sample code below. ↓
+
+<?php
+$url = "https://script.google.com/macros/s/AKfycbyLuxhazLmj4YG-8RvlV7ZJrYkLMwvlxRXN2Dr65Y6ehCBS0E9JZrww1J1Q_TFE8V5Fig/exec";
+
+$ch = curl_init();
+    
+// Grab URL and pass it to the variable.
+curl_setopt($ch, CURLOPT_URL, $url);
+
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+$html = curl_exec($ch);
+echo$html;
+
+?>
+
+7.Showing all spreadsheet data in Localhost using above code.
+                                                                                  ……….
